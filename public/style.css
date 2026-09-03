@@ -194,11 +194,68 @@ a { color: inherit; }
   color: #fff;
 }
 
+.locate-btn {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  margin-bottom: 0.75rem;
+}
+.locate-btn:hover { border-color: var(--accent); color: var(--accent); }
+.locate-btn:disabled { opacity: 0.6; cursor: default; }
+
 #app {
   max-width: 920px;
   margin: 1rem auto 0;
   padding: 0 1rem;
 }
+
+.locate-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 0.9rem 1rem;
+  margin-bottom: 0.85rem;
+}
+.locate-panel h2 {
+  font-size: 0.9rem;
+  margin: 0 0 0.6rem;
+}
+.locate-panel .locate-msg {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+.locate-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.locate-row:last-child { border-bottom: none; }
+.locate-row .road-badge { padding: 0.3rem 0.4rem; font-size: 0.75rem; }
+.locate-row .locate-info { flex: 1; min-width: 0; }
+.locate-row .locate-label { font-size: 0.88rem; font-weight: 600; }
+.locate-row .locate-sub { font-size: 0.75rem; color: var(--text-muted); }
+.locate-row .locate-dist {
+  flex: none;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.locate-row.very-close .locate-dist { color: var(--tag-new); }
 
 .empty-state {
   text-align: center;

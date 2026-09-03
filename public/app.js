@@ -29,7 +29,109 @@
     title: document.getElementById("page-title"),
     subtitle: document.getElementById("page-subtitle"),
     updatedNote: document.getElementById("updated-note"),
+    locateBtn: document.getElementById("locate-btn"),
+    locatePanel: document.getElementById("locate-panel"),
   };
+
+  function haversineKm(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const toRad = (d) => (d * Math.PI) / 180;
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+    return 2 * R * Math.asin(Math.sqrt(a));
+  }
+
+  function formatDist(km) {
+    return km < 1 ? `${Math.round(km * 1000)} ម` : `${km.toFixed(1)} គ.ម`;
+  }
+
+  function allGeocodedPoints() {
+    const out = [];
+    for (const road of state.data.roads) {
+      for (const point of road.points) {
+        if (typeof point.lat === "number" && typeof point.lng === "number") {
+          out.push({ road, point });
+        }
+      }
+    }
+    return out;
+  }
+
+  function jumpToRoad(roadCode) {
+    state.openRoads.add(roadCode);
+    render();
+    const card = els.roadList.querySelector(`.road-card[data-code="${CSS.escape(roadCode)}"]`);
+    if (card) card.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  function renderLocatePanel(userLat, userLng) {
+    const candidates = allGeocodedPoints()
+      .map((c) => ({ ...c, dist: haversineKm(userLat, userLng, c.point.lat, c.point.lng) }))
+      .sort((a, b) => a.dist - b.dist)
+      .slice(0, 8);
+
+    if (candidates.length === 0) {
+      els.locatePanel.innerHTML = `<p class="locate-msg">មិនមានទិន្នន័យទីតាំង (GPS) សម្រាប់ចំណុចកាមេរ៉ាណាមួយនៅឡើយទេ។</p>`;
+      els.locatePanel.hidden = false;
+      return;
+    }
+
+    const rows = candidates
+      .map(({ road, point, dist }) => {
+        const closeCls = dist < 1 ? " very-close" : "";
+        const km = point.km ? `គ.ម ${escapeHtml(point.km)}` : "";
+        const label = point.label && point.label.trim() ? escapeHtml(point.label) : "";
+        return `
+          <div class="locate-row${closeCls}" data-road="${escapeHtml(road.code)}">
+            <div class="road-badge">NR${escapeHtml(road.code)}</div>
+            <div class="locate-info">
+              <div class="locate-label">${label || km || "ចំណុចកាមេរ៉ា"}</div>
+              <div class="locate-sub">${[km, escapeHtml(road.route)].filter(Boolean).join(" • ")}</div>
+            </div>
+            <div class="locate-dist">${formatDist(dist)}</div>
+          </div>`;
+      })
+      .join("");
+
+    els.locatePanel.innerHTML = `
+      <h2>ចំណុចកាមេរ៉ាជិតអ្នកបំផុត</h2>
+      ${rows}
+    `;
+    els.locatePanel.hidden = false;
+    els.locatePanel.querySelectorAll(".locate-row").forEach((row) => {
+      row.addEventListener("click", () => jumpToRoad(row.dataset.road));
+    });
+  }
+
+  function initLocate() {
+    if (!els.locateBtn) return;
+    els.locateBtn.addEventListener("click", () => {
+      if (!("geolocation" in navigator)) {
+        els.locatePanel.innerHTML = `<p class="locate-msg">ឧបករណ៍នេះមិនគាំទ្រ GPS ទេ។</p>`;
+        els.locatePanel.hidden = false;
+        return;
+      }
+      els.locateBtn.disabled = true;
+      els.locateBtn.textContent = "កំពុងស្វែងរកទីតាំង...";
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          els.locateBtn.disabled = false;
+          els.locateBtn.innerHTML = `<span aria-hidden="true">📍</span> ធ្វើបច្ចុប្បន្នភាពទីតាំង`;
+          renderLocatePanel(pos.coords.latitude, pos.coords.longitude);
+        },
+        (err) => {
+          els.locateBtn.disabled = false;
+          els.locateBtn.innerHTML = `<span aria-hidden="true">📍</span> តើខ្ញុំនៅជិតកាមេរ៉ាណា?`;
+          els.locatePanel.innerHTML = `<p class="locate-msg">មិនអាចយកទីតាំងបានទេ៖ សូមអនុញ្ញាតការចូលប្រើទីតាំង (Location) ជាមុនសិន។</p>`;
+          els.locatePanel.hidden = false;
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 30000 }
+      );
+    });
+  }
 
   function escapeHtml(str) {
     return String(str).replace(/[&<>"']/g, (c) => ({
@@ -196,6 +298,7 @@
     buildFilterChips();
     renderStats();
     render();
+    initLocate();
 
     els.search.addEventListener("input", (e) => {
       state.query = e.target.value;
