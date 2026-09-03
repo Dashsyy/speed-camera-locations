@@ -1,0 +1,13 @@
+{
+  "name": "speed-camera-map",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static site listing speed camera locations by national road in Cambodia",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

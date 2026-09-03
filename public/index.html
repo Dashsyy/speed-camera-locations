@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="km">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>កាមេរ៉ាបាញ់ល្បឿន</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📷</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-icon" aria-hidden="true">📷</span>
+        <div>
+          <h1 id="page-title">កាមេរ៉ាបាញ់ល្បឿន</h1>
+          <p id="page-subtitle" class="muted"></p>
+        </div>
+      </div>
+      <div class="stats" id="global-stats"></div>
+    </div>
+    <div class="toolbar">
+      <div class="search-wrap">
+        <span class="search-icon" aria-hidden="true">🔍</span>
+        <input id="search" type="text" inputmode="search" placeholder="ស្វែងរក ផ្លូវជាតិ, ទីតាំង, ឬ គ.ម (ឧ. NR5, ព្រែកព្នៅ, 78)" autocomplete="off" />
+        <button id="clear-search" class="clear-btn" type="button" aria-label="សម្អាត" hidden>✕</button>
+      </div>
+      <div class="filters" id="tag-filters"></div>
+    </div>
+  </header>
+
+  <main id="app">
+    <div id="empty-state" class="empty-state" hidden>
+      <p>មិនមានលទ្ធផលត្រូវនឹងការស្វែងរករបស់អ្នកទេ។</p>
+    </div>
+    <div id="road-list" class="road-list"></div>
+  </main>
+
+  <footer class="site-footer">
+    <p>ទិន្នន័យផ្អែកលើប្រកាសគោលដៅបាញ់ល្បឿនប្រចាំខែ។ ត្រូវការផ្ទៀងផ្ទាត់ជាមួយប្រភពផ្លូវការមុនធ្វើដំណើរ។</p>
+    <p class="updated" id="updated-note"></p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
