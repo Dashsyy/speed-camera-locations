@@ -269,6 +269,39 @@ a { color: inherit; }
 }
 .locate-row.very-close .locate-dist { color: var(--tag-new); }
 
+.legal-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  margin-top: 0.4rem;
+}
+.legal-table th, .legal-table td {
+  text-align: left;
+  padding: 0.4rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.legal-table th {
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.72rem;
+}
+.legal-table td:not(:first-child), .legal-table th:not(:first-child) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.legal-note {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.6rem;
+  line-height: 1.6;
+}
+.legal-source {
+  font-size: 0.72rem;
+  margin-top: 0.4rem;
+}
+.legal-source a { color: var(--accent); }
+
 .empty-state {
   text-align: center;
   color: var(--text-muted);

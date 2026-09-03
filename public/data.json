@@ -1,8 +1,21 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "title": "គោលដៅបាញ់ល្បឿនសម្រាប់ខែកញ្ញា",
   "subtitle": "កាមេរ៉ាបាញ់ល្បឿន",
   "updated": "2026-09-03",
+  "legalSpeedLimits": {
+    "title": "ល្បឿនកំណត់តាមច្បាប់ (មាត្រា ១៧)",
+    "source": "ច្បាប់ស្តីពីចរាចរណ៍ផ្លូវគោក មាត្រា ១៧ (Cambodian Land Traffic Law, Article 17)",
+    "sourceUrl": "https://data.opendevelopmentmekong.net/dataset/f27b5103-87d5-4baf-8557-b30212c19e2c/resource/ab3af9ad-c1ee-4cb5-b980-f5c86a42a475/download/455de40f-a787-4855-bbd3-4480ccfaa89f.pdf",
+    "rows": [
+      { "category": "ម៉ូតូ/តូកទុក", "inTown": "30 គ.ម/ម", "outTown": "—" },
+      { "category": "ឡានទូទៅ", "inTown": "40 គ.ម/ម", "outTown": "90 គ.ម/ម" },
+      { "category": "ឡានដឹកទំនិញ > 3.5 តោន", "inTown": "40 គ.ម/ម", "outTown": "70 គ.ម/ម" },
+      { "category": "រថយន្តអូសកទ្រុង (Trailer)", "inTown": "40 គ.ម/ម", "outTown": "60 គ.ម/ម" },
+      { "category": "ផ្លូវហាយវេ (Motorway)", "inTown": "60 គ.ម/ម", "outTown": "100 គ.ម/ម" }
+    ],
+    "note": "ចំណុចកាមេរ៉ាដែលមិនមានស្លាកល្បឿនកំណត់ជាក់លាក់ ត្រូវអនុវត្តតាមតារាងស្តង់ដារនេះ អាស្រ័យលើថាតើកន្លែងនោះស្ថិតក្នុង ឬក្រៅទីប្រជុំជន។ សូមអនុវត្តតាមស្លាកសញ្ញាដែលបានប្រកាសនៅនឹងកន្លែងជាចម្បង។"
+  },
   "roads": [
     {
       "code": "1",

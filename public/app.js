@@ -32,6 +32,8 @@
     version: document.getElementById("app-version"),
     locateBtn: document.getElementById("locate-btn"),
     locatePanel: document.getElementById("locate-panel"),
+    legalBtn: document.getElementById("legal-btn"),
+    legalPanel: document.getElementById("legal-panel"),
   };
 
   function haversineKm(lat1, lon1, lat2, lon2) {
@@ -107,9 +109,56 @@
     });
   }
 
+  function renderLegalPanel() {
+    const legal = state.data.legalSpeedLimits;
+    if (!legal || !els.legalPanel) return;
+    const rows = (legal.rows || [])
+      .map(
+        (r) => `
+        <tr>
+          <td>${escapeHtml(r.category)}</td>
+          <td>${escapeHtml(r.inTown)}</td>
+          <td>${escapeHtml(r.outTown)}</td>
+        </tr>`
+      )
+      .join("");
+    els.legalPanel.innerHTML = `
+      <h2>${escapeHtml(legal.title || "ល្បឿនកំណត់តាមច្បាប់")}</h2>
+      <table class="legal-table">
+        <thead>
+          <tr><th>ប្រភេទយានយន្ត</th><th>ក្នុងទីប្រជុំជន</th><th>ក្រៅទីប្រជុំជន</th></tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+      ${legal.note ? `<p class="legal-note">${escapeHtml(legal.note)}</p>` : ""}
+      ${
+        legal.source
+          ? `<p class="legal-source muted">ប្រភព៖ ${
+              legal.sourceUrl
+                ? `<a href="${escapeHtml(legal.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(legal.source)}</a>`
+                : escapeHtml(legal.source)
+            }</p>`
+          : ""
+      }
+    `;
+  }
+
+  function initLegal() {
+    if (!els.legalBtn) return;
+    renderLegalPanel();
+    els.legalBtn.addEventListener("click", () => {
+      els.legalPanel.hidden = !els.legalPanel.hidden;
+      if (!els.legalPanel.hidden) {
+        els.locatePanel.hidden = true;
+        els.legalPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  }
+
   function initLocate() {
     if (!els.locateBtn) return;
     els.locateBtn.addEventListener("click", () => {
+      if (els.legalPanel) els.legalPanel.hidden = true;
       if (!("geolocation" in navigator)) {
         els.locatePanel.innerHTML = `<p class="locate-msg">ឧបករណ៍នេះមិនគាំទ្រ GPS ទេ។</p>`;
         els.locatePanel.hidden = false;
@@ -301,6 +350,7 @@
     renderStats();
     render();
     initLocate();
+    initLegal();
 
     els.search.addEventListener("input", (e) => {
       state.query = e.target.value;
