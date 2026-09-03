@@ -36,7 +36,14 @@ const server = http.createServer((req, res) => {
       filePath = path.join(PUBLIC_DIR, "index.html");
     }
     const ext = path.extname(filePath);
-    res.writeHead(200, { "Content-Type": MIME_TYPES[ext] || "application/octet-stream" });
+    res.writeHead(200, {
+      "Content-Type": MIME_TYPES[ext] || "application/octet-stream",
+      // This app iterates often and is low-traffic -- correctness beats
+      // caching. Without this, browsers apply their own heuristic caching
+      // to .js/.css and can keep serving a stale app.js long after a
+      // redeploy, with no way to tell from the page itself.
+      "Cache-Control": "no-store",
+    });
     fs.createReadStream(filePath).pipe(res);
   });
 });
