@@ -29,6 +29,7 @@
     title: document.getElementById("page-title"),
     subtitle: document.getElementById("page-subtitle"),
     updatedNote: document.getElementById("updated-note"),
+    version: document.getElementById("app-version"),
     locateBtn: document.getElementById("locate-btn"),
     locatePanel: document.getElementById("locate-panel"),
   };
@@ -295,6 +296,7 @@
     els.title.textContent = data.subtitle || data.title;
     els.subtitle.textContent = data.title;
     els.updatedNote.textContent = data.updated ? `ធ្វើបច្ចុប្បន្នភាពចុងក្រោយ: ${data.updated}` : "";
+    if (els.version) els.version.textContent = data.version ? `v${data.version}` : "";
     buildFilterChips();
     renderStats();
     render();

@@ -113,6 +113,18 @@ a { color: inherit; }
 .brand h1 { font-size: 1.25rem; margin: 0; }
 .brand p { margin: 0.1rem 0 0; font-size: 0.85rem; }
 
+.version-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.1rem 0.45rem;
+  vertical-align: middle;
+  margin-left: 0.3rem;
+}
+
 .stats {
   display: flex;
   gap: 0.5rem;
