@@ -82,14 +82,15 @@
   async function fetchProvince(lat, lng) {
     try {
       const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&addressdetails=1&accept-language=km`;
-      const res = await fetch(url);
-      if (!res.ok) return null;
+      const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
+      if (!res.ok) return { error: `HTTP ${res.status}` };
       const data = await res.json();
       const addr = data.address || {};
-      if (addr.country_code !== "kh") return null;
-      return addr.state || addr.county || null;
+      if (addr.country_code !== "kh") return { error: "outside Cambodia" };
+      const name = addr.state || addr.county || null;
+      return name ? { name } : { error: "no province in response" };
     } catch (e) {
-      return null;
+      return { error: e.name === "TimeoutError" ? "timeout" : e.message || "network error" };
     }
   }
 
@@ -134,13 +135,16 @@
       row.addEventListener("click", () => jumpToRoad(row.dataset.road));
     });
 
-    fetchProvince(userLat, userLng).then((province) => {
+    fetchProvince(userLat, userLng).then((result) => {
       const slot = document.getElementById("locate-province");
       if (!slot) return;
-      slot.innerHTML = province
-        ? `📍 អ្នកកំពុងស្ថិតនៅ <strong>${escapeHtml(province)}</strong>`
-        : "";
-      slot.hidden = !province;
+      if (result.name) {
+        slot.innerHTML = `📍 អ្នកកំពុងស្ថិតនៅ <strong>${escapeHtml(result.name)}</strong>`;
+      } else {
+        console.warn("Province lookup failed:", result.error);
+        slot.innerHTML = `<span class="locate-province-spinner">មិនអាចកំណត់ខេត្តបានទេ (${escapeHtml(result.error)})</span>`;
+      }
+      slot.hidden = false;
     });
   }
 
