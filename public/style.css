@@ -269,6 +269,16 @@ a { color: inherit; }
 }
 .locate-row.very-close .locate-dist { color: var(--tag-new); }
 
+.locate-province {
+  font-size: 0.85rem;
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 0.5rem 0.7rem;
+  margin-bottom: 0.6rem;
+}
+.locate-province strong { color: var(--accent); }
+.locate-province-spinner { color: var(--text-muted); font-size: 0.8rem; }
+
 .legal-table {
   width: 100%;
   border-collapse: collapse;

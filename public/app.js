@@ -70,6 +70,20 @@
     if (card) card.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
+  async function fetchProvince(lat, lng) {
+    try {
+      const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&addressdetails=1&accept-language=km`;
+      const res = await fetch(url);
+      if (!res.ok) return null;
+      const data = await res.json();
+      const addr = data.address || {};
+      if (addr.country_code !== "kh") return null;
+      return addr.state || addr.county || null;
+    } catch (e) {
+      return null;
+    }
+  }
+
   function renderLocatePanel(userLat, userLng) {
     const candidates = allGeocodedPoints()
       .map((c) => ({ ...c, dist: haversineKm(userLat, userLng, c.point.lat, c.point.lng) }))
@@ -100,12 +114,24 @@
       .join("");
 
     els.locatePanel.innerHTML = `
+      <div class="locate-province" id="locate-province">
+        <span class="locate-province-spinner">⏳ កំពុងស្វែងរកខេត្ត...</span>
+      </div>
       <h2>ចំណុចកាមេរ៉ាជិតអ្នកបំផុត</h2>
       ${rows}
     `;
     els.locatePanel.hidden = false;
     els.locatePanel.querySelectorAll(".locate-row").forEach((row) => {
       row.addEventListener("click", () => jumpToRoad(row.dataset.road));
+    });
+
+    fetchProvince(userLat, userLng).then((province) => {
+      const slot = document.getElementById("locate-province");
+      if (!slot) return;
+      slot.innerHTML = province
+        ? `📍 អ្នកកំពុងស្ថិតនៅ <strong>${escapeHtml(province)}</strong>`
+        : "";
+      slot.hidden = !province;
     });
   }
 
