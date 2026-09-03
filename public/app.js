@@ -63,11 +63,20 @@
     return out;
   }
 
+  function scrollBelowHeader(el, extra = 12) {
+    if (!el) return;
+    const header = document.querySelector(".site-header");
+    const headerHeight = header ? header.getBoundingClientRect().height : 0;
+    const rect = el.getBoundingClientRect();
+    const targetY = window.scrollY + rect.top - headerHeight - extra;
+    window.scrollTo({ top: Math.max(targetY, 0), behavior: "smooth" });
+  }
+
   function jumpToRoad(roadCode) {
     state.openRoads.add(roadCode);
     render();
     const card = els.roadList.querySelector(`.road-card[data-code="${CSS.escape(roadCode)}"]`);
-    if (card) card.scrollIntoView({ behavior: "smooth", block: "center" });
+    scrollBelowHeader(card);
   }
 
   async function fetchProvince(lat, lng) {
@@ -176,7 +185,7 @@
       els.legalPanel.hidden = !els.legalPanel.hidden;
       if (!els.legalPanel.hidden) {
         els.locatePanel.hidden = true;
-        els.legalPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+        scrollBelowHeader(els.legalPanel);
       }
     });
   }
